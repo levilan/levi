@@ -1,0 +1,47 @@
+;Automation by Levi Lan 2017.4.12
+
+run( @WindowsDir & "\syswow64\WindowsPowerShell\v1.0\powershell.exe")
+WinWaitActive("系統管理員")
+$year = @YEAR
+$month = @MON
+$day = @MDAY
+$date = $month&StringFormat("%02d",$day)
+$olddate = $month&StringFormat("%02d",$day - 1)
+$solaris = 'cat 14_Solaris.csv |Select-String "HOSTNAME","\*SYSTEM TIME\*","remote","\*jobmadr1","\+jobmadr1","\#jobmadr1","\*10.51.5.1","\+10.51.5.1","\#10.51.5.1","\*10.51.5.3","\+10.51.5.3","\#10.51.5.3","\*10.50.20.49","\+10.50.20.49","\#10.50.20.49","\*10.50.20.209","\+10.50.20.209","\#10.50.20.209","\*sysmon-1","\+sysmon-1","\#sysmon-1","SYSTEM USAGE","SYSTEM TIME","89%","90%","91%","92%","93%","94%","95%","96%","97%","98%","99%","SYSTEM EVENT",":'
+$AIX = 'cat 13_AIX.csv |Select-String "Success","remote           refid","\*jobmadr1","\+jobmadr1","\*10.51.5.1","\+10.51.5.1","\*10.51.5.3","\+10.51.5.3","\*10.50.20.49","\+10.50.20.49","\*10.50.20.209","\+10.50.20.209","\*sysmon-1","\+sysmon-1","Failed","%Used","89%","90%","91%","92%","93%","94%","95%","96%","97%","98%","99%",'
+$HPUX = 'cat 29_HPUX.csv |Select-String "Success","remote","\*date\*","\*jobmadr1","\+jobmadr1","\*10.51.5.1","\+10.51.5.1","\*10.51.5.3","\+10.51.5.3","\*10.50.20.49","\+10.50.20.49","\*10.50.20.209","\#10.50.20.209","\*sysmon-1","\+sysmon-1","89%","EMS","90%","91%","92%","93%","94%","95%","96%","97%","98%","99%",":'
+$linux = 'cat 186_Linux.csv |Select-String "Success","89%","90%","91%","92%","93%","94%","95%","96%","97%","98%","99%",":'
+$linux2 = 'cat 140_Linux_2.csv |Select-String "Success","89%","90%","91%","92%","93%","94%","95%","96%","97%","98%","99%",":'
+$windows2003 = 'cat 91_Win2003.csv |Select-String "SYSTEM_TIME","Category:","Computer Name:","Event Code:","Message:","Record Number:","Source Name:","Time Written:","Event Type:","User:","LogFile:","---------" '
+$windows2008 = 'cat 224_Win2008.csv |Select-String "HOSTNAME","Category:","Computer Name:","Event Code:","Message:","Record Number:","Source Name:","Time Written:","Event Type:","User:","LogFile:","---------" '
+$mon = InputBox("Automation RUN", "請輸入月份", "ex:Apr", "")
+$Dir = InputBox("Automation RUN", "請指定檔案目錄位置", "C:\Users\c1703002\Desktop\daily", "")
+;Send( "cd C:\Users\c1703002\Desktop\proxry\Automation__powershell\SA_" & date2)
+Send ("cd " & $Dir & "\SA_" & $date)
+Send("{ENTER}")
+;Send($solaris&$mon&" "&" "&$day - 1&'",":'&$mon&" "&" "&$day&" "&'"'&">>Solaris-2017"&$date&".txt", 1) ;個位數日
+Send($solaris&$mon&" "&$day - 1&'",":'&$mon&" "&$day&" "&'"'&">>Solaris-2017"&$date&".txt", 1) ;複數日
+Send("{ENTER}")
+sleep(1000)
+Send($AIX&'"'&$olddate&'"'&","&'"'&$date&'"'&","&'"'&$mon&'"'&">AIX-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send($HPUX&$mon&" "&$day - 1&'",":'&$mon&" "&$day&'" '&">>HPUX-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send($linux&$mon&" "&$day - 1&'",":'&$mon&" "&$day&'" '&">>Linux-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send($linux2&$mon&" "&$day - 1&'",":'&$mon&" "&$day&'" '&">>Linux_2-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send($windows2003&">>Win2003-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send($windows2008&">>Win2008-"&$year&$date&".txt", 1)
+Send("{ENTER}")
+sleep(1000)
+Send("exit")
+Send("{ENTER}")
+WinWaitClose("系統管理員")
+MsgBox(0,"","Complete!!!")
